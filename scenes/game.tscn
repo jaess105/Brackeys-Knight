@@ -179,7 +179,7 @@ _data = {
 [node name="Game" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_uwrxv")]
-position = Vector2(40, 16)
+position = Vector2(103, 13)
 collision_layer = 2
 
 [node name="Camera2D" type="Camera2D" parent="Player"]

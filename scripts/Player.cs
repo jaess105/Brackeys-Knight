@@ -9,8 +9,13 @@ public partial class Player : CharacterBody2D
 	public const float Speed = 130.0f;
 	public const float JumpVelocity = -300.0f;
 
+
+
 	public override void _PhysicsProcess(double delta)
 	{
+		if (ExecuteYeeting((float)delta)) { return; }
+
+
 		Vector2 velocity = this.ApplyGravity((float)delta, this.Velocity);
 
 		// Handle Jump.
@@ -30,3 +35,34 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 }
+
+/// <summary>
+/// Implement and encapsulate the yeeting functionality
+/// </summary>
+public partial class Player : IYeetable
+{
+	private float _rotationSpeed = 0f;
+	private bool _isDead = false;
+
+	public void Yeet(Vector2 impulse)
+	{
+		_isDead = true;
+		_rotationSpeed = Mathf.DegToRad(360); // one full spin per second
+
+		Velocity = impulse;
+
+		GetNode<CollisionShape2D>(nameof(CollisionShape2D)).QueueFree();
+	}
+
+	private bool ExecuteYeeting(float delta)
+	{
+		if (!_isDead) { return false; }
+
+		Velocity += Vector2.Down * GetGravity() * delta;
+		Rotation += _rotationSpeed * delta;
+
+		MoveAndSlide();
+		return true;
+	}
+}
+

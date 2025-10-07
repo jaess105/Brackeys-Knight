@@ -13,11 +13,25 @@ public partial class Killzone : Area2D
 			var timer = GetNode<Timer>("Timer");
 			timer.Timeout += () =>
 			{
+				Engine.TimeScale = 1;
 				this.GameOver();
 				Free();
 			};
 
-			timer.Start();
+
+			if (body is IYeetable player)
+			{
+				Printer.Print("You died!");
+				Engine.TimeScale = .5;
+				player.Yeet(new Vector2(200, -400));
+				timer.Start();
+			}
+#if DEBUG
+			else
+			{
+				Printer.Print("An object that was not yeetable entered the killzone");
+			}
+#endif
 		};
 
 	}
