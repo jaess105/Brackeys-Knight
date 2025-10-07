@@ -13,7 +13,7 @@ public partial class Killzone : Area2D
 			var timer = GetNode<Timer>("Timer");
 			timer.Timeout += () =>
 			{
-				GetTree().ReloadCurrentScene();
+				this.GameOver();
 				Free();
 			};
 

@@ -1,3 +1,4 @@
+using Brackeys.Knight.Util;
 using Godot;
 using System;
 
@@ -10,13 +11,7 @@ public partial class Player : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
-
-		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
+		Vector2 velocity = this.ApplyGravity((float)delta, this.Velocity);
 
 		// Handle Jump.
 		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
