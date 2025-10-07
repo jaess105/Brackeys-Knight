@@ -5,7 +5,7 @@ using System;
 
 public partial class GameManager : Node
 {
-	private int _score;
+	private int _score = 0;
 	private int _maxScore;
 	private Label _scoreLabel;
 
@@ -13,12 +13,16 @@ public partial class GameManager : Node
 	{
 		_scoreLabel = GetNode<Label>("ScoreLabel");
 		_maxScore = this.GetNodesOfType<Coin>().Count;
+
+		SetScoreText();
 	}
 
 
 	public void AddPoint()
 	{
 		_score++;
-		_scoreLabel.Text = $"You collected {_score} / {_maxScore} coins!";
+		SetScoreText();
 	}
+
+	private void SetScoreText() => _scoreLabel.Text = $"You collected {_score} / {_maxScore} coins!";
 }
