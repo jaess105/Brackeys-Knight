@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using Godot;
 
@@ -8,6 +9,24 @@ public static class Util
     public static void GameOver(this Node2D self)
     {
         self.GetTree().ReloadCurrentScene();
+    }
+
+    public static List<T> GetNodesOfType<T>(this Node self)
+        where T : Node
+        => self.GetTree().Root.GetNodesOfTypeRecur<T>();
+
+    private static List<T> GetNodesOfTypeRecur<T>(this Node self, List<T> coll = null)
+        where T : Node
+    {
+        coll ??= [];
+        if (self is T node) { coll.Add(node); }
+
+        foreach (var child in self.GetChildren())
+        {
+            child.GetNodesOfTypeRecur(coll);
+        }
+
+        return coll;
     }
 }
 

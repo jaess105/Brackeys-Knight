@@ -13,6 +13,7 @@ public partial class Player : CharacterBody2D
 	public override void _Ready()
 	{
 		_sprite = GetNode<AnimatedSprite2D>(nameof(AnimatedSprite2D));
+		_sprite.Play("idle");
 	}
 
 	public override void _PhysicsProcess(double delta)

@@ -8,18 +8,18 @@ namespace Brackeys.Knight.Coin;
 
 public partial class Coin : Area2D
 {
-	/// <summary>
-	/// Called when the node enters the scene tree for the first time.
-	/// </summary>
+	private GameManager _gameManager;
+
 	public override void _Ready()
 	{
+		_gameManager = GetNode<GameManager>("%GameManager");
+
 		BodyEntered += OnBodyEntered;
 	}
 
 	void OnBodyEntered(Node2D body)
 	{
-		Printer.Print($"{body.Name} entered {Name}");
+		_gameManager.AddPoint();
 		QueueFree();
-		Printer.Print($"Queued {Name} for removal");
 	}
 }
