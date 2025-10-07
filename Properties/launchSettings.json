@@ -1,0 +1,13 @@
+{
+    "profiles": {
+        "Development": {
+            "commandName": "Executable",
+            "executablePath": "/path/to/Godot_csharp_b1.app/Contents/MacOS/Godot",
+            "commandLineArgs": "--debug-server tcp://127.0.0.1:6666",
+            "workingDirectory": "/path/to/my/project",
+            "authenticationMode": "None",
+            "remoteDebugEnabled": false,
+            "remoteDebugMachine": ""
+        }
+    }
+}
