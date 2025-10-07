@@ -15,7 +15,7 @@ public partial class Killzone : Area2D
 			{
 				Engine.TimeScale = 1;
 				this.GameOver();
-				Free();
+				QueueFree();
 			};
 
 
