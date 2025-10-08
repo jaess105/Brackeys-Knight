@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7crxg8w0030l"]
+
+[ext_resource type="Script" uid="uid://dmdivqfphkric" path="res://scripts/Hud/Hud.cs" id="1_5ysmq"]
+[ext_resource type="FontFile" uid="uid://d1hadpa8c21bi" path="res://assets/fonts/PixelOperator8.ttf" id="1_oo0fn"]
+[ext_resource type="FontFile" uid="uid://btyotui0aebqu" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_5ysmq"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_5ysmq")
+
+[node name="ScoreLabel" type="Label" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 88.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_fonts/font = ExtResource("1_oo0fn")
+theme_override_font_sizes/font_size = 64
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Message" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -292.0382
+offset_top = -65.5
+offset_right = 292.0382
+offset_bottom = 65.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_5ysmq")
+theme_override_font_sizes/font_size = 64
+text = "Reach the top!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StartButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.0
+offset_top = 100.0
+offset_right = 136.0
+offset_bottom = 172.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_oo0fn")
+theme_override_font_sizes/font_size = 32
+text = "Start"
+autowrap_mode = 2
+
+[node name="RestartButton" type="Button" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.0
+offset_top = 100.0
+offset_right = 136.0
+offset_bottom = 172.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_oo0fn")
+theme_override_font_sizes/font_size = 32
+text = "Restart"
+autowrap_mode = 2
+
+[node name="MessageTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="pressed" from="StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="RestartButton" to="." method="OnRestartButtonPressed"]
+[connection signal="timeout" from="MessageTimer" to="." method="OnMessageTimerTimeout"]

@@ -1,14 +1,16 @@
-[gd_scene load_steps=25 format=4 uid="uid://b6eo5qqcu4q6r"]
+[gd_scene load_steps=27 format=4 uid="uid://b6eo5qqcu4q6r"]
 
 [ext_resource type="Script" uid="uid://5d2wcvbqwwep" path="res://scripts/GameManager.cs" id="1_gee14"]
 [ext_resource type="PackedScene" uid="uid://cmfspt52fx01v" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="FontFile" uid="uid://btyotui0aebqu" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_0tnpc"]
+[ext_resource type="Script" uid="uid://dnktwjbceffhh" path="res://scripts/Camera2d.cs" id="3_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://biyco1tlchlb4" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://ckpkychsyxuox" path="res://scenes/enemy_green.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://cmnwsj51rylaw" path="res://scenes/coin.tscn" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://bhcw1dlydxc2t" path="res://scenes/killzone.tscn" id="5_iywne"]
 [ext_resource type="TileSet" uid="uid://dwth4spk4b28m" path="res://assets/sprites/tile_map.tres" id="5_p57ef"]
 [ext_resource type="FontFile" uid="uid://d1hadpa8c21bi" path="res://assets/fonts/PixelOperator8.ttf" id="7_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://c7crxg8w0030l" path="res://scenes/hud.tscn" id="10_vtaks"]
 
 [sub_resource type="Theme" id="Theme_gee14"]
 
@@ -52,23 +54,6 @@ _data = {
 &"RESET": SubResource("Animation_lbhrr")
 }
 
-[sub_resource type="Animation" id="Animation_iywne"]
-resource_name = "move"
-length = 1.5
-loop_mode = 2
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(426, -11), Vector2(426, -60)]
-}
-
 [sub_resource type="Animation" id="Animation_p57ef"]
 length = 0.001
 tracks/0/type = "value"
@@ -99,11 +84,43 @@ tracks/0/keys = {
 "values": [Vector2(426, -11)]
 }
 
+[sub_resource type="Animation" id="Animation_iywne"]
+resource_name = "move"
+length = 1.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(426, -11), Vector2(426, -60)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gee14"]
 _data = {
 &"RESET": SubResource("Animation_p57ef"),
 &"left_right": SubResource("Animation_u5sy4"),
 &"move": SubResource("Animation_iywne")
+}
+
+[sub_resource type="Animation" id="Animation_vtaks"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(200, -264)]
 }
 
 [sub_resource type="Animation" id="Animation_0tnpc"]
@@ -123,7 +140,13 @@ tracks/0/keys = {
 "values": [Vector2(200, -264), Vector2(200, -184)]
 }
 
-[sub_resource type="Animation" id="Animation_vtaks"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kvpfn"]
+_data = {
+&"RESET": SubResource("Animation_vtaks"),
+&"up_down": SubResource("Animation_0tnpc")
+}
+
+[sub_resource type="Animation" id="Animation_kvuet"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -135,13 +158,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(200, -264)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_kvpfn"]
-_data = {
-&"RESET": SubResource("Animation_vtaks"),
-&"up_down": SubResource("Animation_0tnpc")
+"values": [Vector2(160, -264)]
 }
 
 [sub_resource type="Animation" id="Animation_dinhu"]
@@ -158,21 +175,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(160, -264), Vector2(104, -264)]
-}
-
-[sub_resource type="Animation" id="Animation_kvuet"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(160, -264)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_trtic"]
@@ -201,27 +203,33 @@ coins!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Player" parent="." instance=ExtResource("1_uwrxv")]
-position = Vector2(103, 13)
-collision_layer = 2
+[node name="Environment" type="Node" parent="."]
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(1, -11)
+[node name="Camera2D" type="Camera2D" parent="Environment"]
+position = Vector2(104, 2)
 zoom = Vector2(4, 4)
 limit_bottom = 120
 limit_smoothed = true
 position_smoothing_enabled = true
+script = ExtResource("3_kvpfn")
 
-[node name="Killzone" parent="." instance=ExtResource("5_iywne")]
+[node name="Killzone" parent="Environment" instance=ExtResource("5_iywne")]
 position = Vector2(0, 141)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Killzone"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Killzone"]
 shape = SubResource("WorldBoundaryShape2D_p57ef")
 
-[node name="EnemyGreen" parent="." instance=ExtResource("3_p57ef")]
+[node name="Player" parent="." instance=ExtResource("1_uwrxv")]
+unique_name_in_owner = true
+position = Vector2(103, 13)
+collision_layer = 2
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="EnemyGreen" parent="Enemies" instance=ExtResource("3_p57ef")]
 position = Vector2(193, -28)
 
-[node name="EnemyGreen2" parent="." instance=ExtResource("3_p57ef")]
+[node name="EnemyGreen2" parent="Enemies" instance=ExtResource("3_p57ef")]
 position = Vector2(10, -16)
 
 [node name="Coins" type="Node" parent="."]
@@ -365,3 +373,14 @@ theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_fonts/font = ExtResource("7_u5sy4")
 theme_override_font_sizes/font_size = 8
 text = "Finish!"
+
+[node name="HUD" parent="." instance=ExtResource("10_vtaks")]
+unique_name_in_owner = true
+
+[connection signal="PlayerDied" from="GameManager" to="HUD" method="ShowGameOver"]
+[connection signal="PointAdded" from="GameManager" to="HUD" method="UpdateScore"]
+[connection signal="PlayerDied" from="Player" to="GameManager" method="OnPlayerDeath"]
+[connection signal="PlayerDied" from="Player" to="Environment/Camera2D" method="StopFollowPlayer"]
+[connection signal="RestartGame" from="HUD" to="GameManager" method="OnRestart"]
+[connection signal="StartGame" from="HUD" to="Player" method="EnablePlayer"]
+[connection signal="StartGame" from="HUD" to="Environment/Camera2D" method="FollowPlayer"]
