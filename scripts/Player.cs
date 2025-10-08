@@ -8,16 +8,24 @@ public partial class Player : CharacterBody2D
 	public const float Speed = 130.0f;
 	public const float JumpVelocity = -300.0f;
 
+
 	private AnimatedSprite2D _sprite;
 
 	public override void _Ready()
 	{
+		DisablePlayer();
 		_sprite = GetNode<AnimatedSprite2D>(nameof(AnimatedSprite2D));
 		_sprite.Play("idle");
 	}
 
+	private bool _playerEnabled = false;
+	public void EnablePlayer() => _playerEnabled = true;
+	public void DisablePlayer() => _playerEnabled = false;
+
+
 	public override void _PhysicsProcess(double delta)
 	{
+		if (!_playerEnabled) { return; }
 		if (ExecuteYeeting((float)delta)) { return; }
 
 		Vector2 velocity = this.ApplyGravity((float)delta, this.Velocity);
@@ -85,12 +93,17 @@ public partial class Player : CharacterBody2D
 /// </summary>
 public partial class Player : IYeetable
 {
-	private float _rotationSpeed = 0f;
-	private bool _isDead = false;
+	[Signal]
+	public delegate void PlayerDiedEventHandler();
 
-	public void Yeet(Vector2 impulse)
+	private float _rotationSpeed = 0f;
+	private bool _yeet = false;
+
+	public async void Yeet(Vector2 impulse)
 	{
-		_isDead = true;
+		EmitSignal(SignalName.PlayerDied);
+
+		_yeet = true;
 		_rotationSpeed = Mathf.DegToRad(360); // one full spin per second
 
 		Velocity = impulse;
@@ -98,11 +111,15 @@ public partial class Player : IYeetable
 		GetNode<CollisionShape2D>(nameof(CollisionShape2D)).QueueFree();
 
 		_sprite.Play("die");
+
+		await ToSignal(GetTree().CreateTimer(2.0), SceneTreeTimer.SignalName.Timeout);
+		DisablePlayer();
+		_yeet = false;
 	}
 
 	private bool ExecuteYeeting(float delta)
 	{
-		if (!_isDead) { return false; }
+		if (!_yeet) { return false; }
 
 
 		Velocity += Vector2.Down * GetGravity() * delta;
