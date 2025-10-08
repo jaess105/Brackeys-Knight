@@ -1,8 +1,4 @@
 using Godot;
-using System;
-using Brackeys.Knight.Util;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace Brackeys.Knight.Coin;
 
