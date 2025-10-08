@@ -6,7 +6,7 @@ namespace Brackeys.Knight.Util;
 
 public static class Util
 {
-    public static void GameOver(this Node2D self)
+    public static void GameOver(this Node self)
     {
         self.GetTree().ReloadCurrentScene();
     }
