@@ -16,7 +16,7 @@ public partial class Hud : CanvasLayer
 	private Button StartButton => GetNode<Button>("StartButton");
 	private Button RestartButton => GetNode<Button>("RestartButton");
 
-	private Label ScoreLabel => GetNode<Label>("ScoreLabel");
+	private Label ScoreLabel => GetNode<Label>("HBoxContainer/ScoreLabel");
 
 	private void ShowMessage(string text)
 	{
