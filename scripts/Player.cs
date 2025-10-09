@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Brackeys.Knight.Util;
 using Godot;
 
@@ -13,7 +14,16 @@ public partial class Player : CharacterBody2D
 
 	private IPlayerState playerState;
 
-	public Player() { playerState = new NormalPlayerState(this); }
+	private readonly StateContainer<IPlayerState> _stateContainer = new();
+
+	public Player()
+	{
+		_stateContainer.AddState(new NormalPlayerState(this));
+		_stateContainer.AddState(new DisabledPlayerState());
+		_stateContainer.AddState(new YeetingPlayerState(this));
+
+		playerState = _stateContainer.Get<NormalPlayerState>();
+	}
 
 	public override void _Ready()
 	{
@@ -22,8 +32,8 @@ public partial class Player : CharacterBody2D
 		_sprite.Play("idle");
 	}
 
-	public void EnablePlayer() => playerState = new NormalPlayerState(this);
-	public void DisablePlayer() => playerState = new DisabledPlayerState();
+	public void EnablePlayer() => playerState = _stateContainer.Get<NormalPlayerState>();
+	public void DisablePlayer() => playerState = _stateContainer.Get<DisabledPlayerState>();
 
 
 	public override void _PhysicsProcess(double delta)
@@ -120,7 +130,7 @@ public partial class Player : IYeetable
 	{
 		EmitSignal(SignalName.PlayerDied);
 
-		playerState = new YeetingPlayerState(this);
+		playerState = _stateContainer.Get<YeetingPlayerState>();
 		_rotationSpeed = Mathf.DegToRad(360); // one full spin per second
 
 		Velocity = impulse;
@@ -143,4 +153,14 @@ public partial class Player : IYeetable
 			player.MoveAndSlide();
 		}
 	}
+}
+
+public class StateContainer<T>
+{
+	private readonly Dictionary<Type, T> dict = [];
+
+	public void AddState<TI>(TI instance) where TI : class, T
+		=> dict[typeof(TI)] = instance;
+
+	public TI Get<TI>() where TI : class, T => (TI)dict[typeof(TI)];
 }
