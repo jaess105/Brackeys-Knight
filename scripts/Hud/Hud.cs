@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace Brackeys.Knight.Hud;
 
@@ -11,7 +10,7 @@ public partial class Hud : CanvasLayer
 	public delegate void RestartGameEventHandler();
 
 	private Label Message => GetNode<Label>("Message");
-	private Timer MessageTimer => GetNode<Timer>("MessageTimer");
+	private Godot.Timer MessageTimer => GetNode<Godot.Timer>("MessageTimer");
 
 	private Button StartButton => GetNode<Button>("StartButton");
 	private Button RestartButton => GetNode<Button>("RestartButton");
@@ -31,7 +30,7 @@ public partial class Hud : CanvasLayer
 		ShowMessage($"Game Over");
 
 		messageTimer.Start();
-		await ToSignal(messageTimer, Timer.SignalName.Timeout);
+		await ToSignal(messageTimer, Godot.Timer.SignalName.Timeout);
 
 		ShowMessage("Try again!");
 

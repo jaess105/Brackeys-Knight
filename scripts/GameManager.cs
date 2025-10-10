@@ -1,8 +1,8 @@
 using Brackeys.Knight.Coin;
+using Database;
 using Brackeys.Knight.Hud;
 using Brackeys.Knight.Util;
 using Godot;
-using System;
 
 public partial class GameManager : Node
 {
@@ -16,11 +16,17 @@ public partial class GameManager : Node
 	private Label ScoreLabel => GetNode<Label>("ScoreLabel");
 	private Hud Hud => GetNode<Hud>("%HUD");
 
+	private readonly IRunDataRepository _runDataRepository = MainRepository.Instance;
+
 	public override void _Ready()
 	{
+		MainRepository.Init(ProjectSettings.GlobalizePath("user://game_data.db"));
+
 		_maxScore = this.GetNodesOfType<Coin>().Count;
 
 		SetScoreText();
+
+		Printer.Print(string.Join("\n", _runDataRepository.GetPreviousRunData()));
 	}
 
 
@@ -41,6 +47,6 @@ public partial class GameManager : Node
 
 	public void OnRestart()
 	{
-		this.GameOver();	
+		this.GameOver();
 	}
 }

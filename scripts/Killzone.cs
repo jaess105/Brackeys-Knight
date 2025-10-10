@@ -8,7 +8,7 @@ public partial class Killzone : Area2D
 {
 	public void OnBodyEntered(Node2D body)
 	{
-		var timer = GetNode<Timer>("Timer");
+		var timer = GetNode<Godot.Timer>("Timer");
 		timer.Timeout += () =>
 		{
 			Engine.TimeScale = 1;
