@@ -15,4 +15,9 @@
   <ItemGroup>
     <ProjectReference Include="scripts\Projects\Database\Database.csproj" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Include="scripts/Projects/Database/Scripts/**/*.sql" />
+  </ItemGroup>
 </Project>
