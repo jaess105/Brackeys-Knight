@@ -20,7 +20,20 @@ public partial class GameManager : Node
 
 	public override void _Ready()
 	{
-		MainRepository.Init(ProjectSettings.GlobalizePath("user://game_data.db"));
+		string dbPath = ProjectSettings.GlobalizePath("user://game_data.db");
+#if DEBUG
+		try
+		{
+			if (File.Exists(dbPath))
+			{
+				// Delete the database file before upgrade
+				File.Delete(dbPath);
+				Printer.Print("Debug mode: deleted existing database.");
+			}
+		}
+		catch { }
+#endif
+		MainRepository.Init(dbPath);
 
 		_maxScore = this.GetNodesOfType<Coin>().Count;
 
