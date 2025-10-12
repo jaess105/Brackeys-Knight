@@ -1,6 +1,6 @@
+using Brackeys.Knight.Interfaces;
 using Brackeys.Knight.Util;
 using Godot;
-using System;
 
 namespace Brackeys.Knight.Killzone;
 

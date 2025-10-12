@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using Brackeys.Knight.Interfaces;
 using Brackeys.Knight.Util;
 using Godot;
 
