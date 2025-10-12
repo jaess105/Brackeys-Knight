@@ -3,8 +3,10 @@ using Database;
 using Brackeys.Knight.Hud;
 using Brackeys.Knight.Util;
 using Godot;
+using Brackeys.Knight.Player;
+using Brackeys.Knight.Interfaces;
 
-public partial class GameManager : Node
+public partial class GameManager : Node, IPlayerTimerTracker
 {
 	[Signal]
 	public delegate void PointAddedEventHandler(int score);
@@ -15,8 +17,11 @@ public partial class GameManager : Node
 	private int _maxScore;
 	private Label ScoreLabel => GetNode<Label>("ScoreLabel");
 	private Hud Hud => GetNode<Hud>("%HUD");
+	private PlayerRunTimer RunTimer => GetNode<PlayerRunTimer>("PlayerRunTimer");
 
-	private readonly IRunDataRepository _runDataRepository = MainRepository.Instance;
+    public ulong ElapsedTime => RunTimer.ElapsedTime;
+
+    private readonly IRunDataRepository _runDataRepository = MainRepository.Instance;
 
 	public override void _Ready()
 	{
@@ -55,11 +60,27 @@ public partial class GameManager : Node
 
 	public void OnPlayerDeath()
 	{
+		RunTimer.Stop();
 		EmitSignal(SignalName.PlayerDied, _score);
+	}
+
+	public void OnStart() => RunTimer.Start();
+
+	public void OnPlayerWon(string levelName)
+	{
+		var timer = RunTimer;
+		timer.Stop();
+
+		RunData runData = new(null, "Jannik", levelName, _score, TimeSpan.FromMilliseconds((long)timer.FinalElapsedTime));
+		Printer.Print($"Took you long enough {runData}");
+		Printer.Print($"{timer.FinalElapsedTime}ms");
+
+		_runDataRepository.Insert(runData);
 	}
 
 	public void OnRestart()
 	{
+		RunTimer.Reset();
 		this.GameOver();
 	}
 }
