@@ -1,9 +1,11 @@
-[gd_scene load_steps=27 format=4 uid="uid://b6eo5qqcu4q6r"]
+[gd_scene load_steps=30 format=4 uid="uid://b6eo5qqcu4q6r"]
 
 [ext_resource type="Script" uid="uid://5d2wcvbqwwep" path="res://scripts/GameManager.cs" id="1_gee14"]
 [ext_resource type="PackedScene" uid="uid://cmfspt52fx01v" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="FontFile" uid="uid://btyotui0aebqu" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="2_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://cusqmu5muhuv3" path="res://scenes/winnzone.tscn" id="3_dinhu"]
 [ext_resource type="Script" uid="uid://dnktwjbceffhh" path="res://scripts/Camera2d.cs" id="3_kvpfn"]
+[ext_resource type="Script" uid="uid://d6hqil5j5mm1" path="res://scripts/Player/PlayerRunTimer.cs" id="3_kvuet"]
 [ext_resource type="PackedScene" uid="uid://biyco1tlchlb4" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://ckpkychsyxuox" path="res://scenes/enemy_green.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://cmnwsj51rylaw" path="res://scenes/coin.tscn" id="4_lbhrr"]
@@ -13,6 +15,9 @@
 [ext_resource type="PackedScene" uid="uid://c7crxg8w0030l" path="res://scenes/hud.tscn" id="10_vtaks"]
 
 [sub_resource type="Theme" id="Theme_gee14"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dinhu"]
+size = Vector2(64, 94)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_p57ef"]
 
@@ -203,7 +208,18 @@ coins!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="PlayerRunTimer" type="Node" parent="GameManager"]
+script = ExtResource("3_kvuet")
+metadata/_custom_type_script = "uid://d6hqil5j5mm1"
+
 [node name="Environment" type="Node" parent="."]
+
+[node name="Winzone" parent="Environment" instance=ExtResource("3_dinhu")]
+position = Vector2(48, -284)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Winzone"]
+position = Vector2(0, -22)
+shape = SubResource("RectangleShape2D_dinhu")
 
 [node name="Camera2D" type="Camera2D" parent="Environment"]
 position = Vector2(104, 2)
@@ -379,8 +395,11 @@ unique_name_in_owner = true
 
 [connection signal="PlayerDied" from="GameManager" to="HUD" method="ShowGameOver"]
 [connection signal="PointAdded" from="GameManager" to="HUD" method="UpdateScore"]
+[connection signal="PlayerWonLevel" from="Environment/Winzone" to="GameManager" method="OnPlayerWon"]
+[connection signal="body_entered" from="Environment/Winzone" to="Environment/Winzone" method="OnBodyEntered"]
 [connection signal="PlayerDied" from="Player" to="GameManager" method="OnPlayerDeath"]
 [connection signal="PlayerDied" from="Player" to="Environment/Camera2D" method="StopFollowPlayer"]
 [connection signal="RestartGame" from="HUD" to="GameManager" method="OnRestart"]
-[connection signal="StartGame" from="HUD" to="Player" method="EnablePlayer"]
+[connection signal="StartGame" from="HUD" to="GameManager" method="OnStart"]
 [connection signal="StartGame" from="HUD" to="Environment/Camera2D" method="FollowPlayer"]
+[connection signal="StartGame" from="HUD" to="Player" method="EnablePlayer"]
