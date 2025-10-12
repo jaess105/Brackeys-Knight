@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS RunData (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     PlayerName TEXT NOT NULL,
+    LevelName TEXT NOT NULL,
     CollectedCoins INTEGER NOT NULL,
-    TimeToFinish INTEGER NOT NULL
+    TimeToFinishMs INTEGER NOT NULL
 );
