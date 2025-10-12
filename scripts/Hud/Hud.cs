@@ -1,3 +1,4 @@
+using Brackeys.Knight.Interfaces;
 using Godot;
 
 namespace Brackeys.Knight.Hud;
@@ -16,6 +17,13 @@ public partial class Hud : CanvasLayer
 	private Button RestartButton => GetNode<Button>("RestartButton");
 
 	private Label ScoreLabel => GetNode<Label>("HBoxContainer/ScoreLabel");
+	private Label Time => GetNode<Label>("Time");
+
+    public override void _Process(double delta)
+    {
+		Time.Text = TimeSpan.FromMilliseconds(GetNode<IPlayerTimerTracker>("%GameManager").ElapsedTime).ToString();
+    }
+
 
 	private void ShowMessage(string text)
 	{
