@@ -12,7 +12,6 @@ internal sealed class MigrationRunner(string connectionString, Action<string>? p
 
     public void RunMigrations()
     {
-
         UpgradeEngine upgrader = DeployChanges
             .To.SqliteDatabase(_connectionString)
             .WithScriptsEmbeddedInAssemblies([typeof(MigrationRunner).Assembly, Assembly.GetExecutingAssembly()])
